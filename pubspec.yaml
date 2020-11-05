@@ -1,8 +1,7 @@
 name: opencc_plugin
-description: A new flutter plugin project.
+description: OpenCC 简繁体相互转换
 version: 0.0.1
-author:
-homepage:
+homepage: https://github.com/Danny-Z/opencc_flutter
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
