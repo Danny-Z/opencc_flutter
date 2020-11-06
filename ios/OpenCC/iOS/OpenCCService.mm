@@ -14,57 +14,64 @@
 class SimpleConverter;
 
 @interface OpenCCService (){
-    @private opencc::SimpleConverter *simpleConverter;
 }
 
 @end
 
+static opencc::SimpleConverter *lastConverter;
+static OpenCCServiceConverterType lastConverterType = OpenCCServiceConverterTypeS2TWP;
 
 @implementation OpenCCService
 
 -(instancetype)initWithConverterType:(OpenCCServiceConverterType)converterType{
     self = [super init];
     if(self){
-        NSString *json = @"s2t.json";
-        switch (converterType) {
-            case OpenCCServiceConverterTypeS2T:
-                json=@"s2t.json";
-                break;
-            case OpenCCServiceConverterTypeT2S:
-                json=@"t2s.json";
-                break;
-            case OpenCCServiceConverterTypeS2TW:
-                json=@"s2tw.json";
-                break;
-            case OpenCCServiceConverterTypeTW2S:
-                json=@"tw2s.json";
-                break;
-            case OpenCCServiceConverterTypeS2HK:
-                json=@"s2hk.json";
-                break;
-            case OpenCCServiceConverterTypeHK2S:
-                json=@"hk2s.json";
-                break;
-            case OpenCCServiceConverterTypeS2TWP:
-                json=@"s2twp.json";
-                break;
-            case OpenCCServiceConverterTypeTW2SP:
-                json=@"tw2sp.json";
-                break;
-            case OpenCCServiceConverterTypeT2HK:
-                json=@"t2hk.json";
-                break;
-            case OpenCCServiceConverterTypeT2TW:
-                json=@"t2tw.json";
-                break;
-                
-            default:json = @"s2t.json";break;
+        if(lastConverter == nil || lastConverterType != converterType){
+            NSString *json = @"s2t.json";
+            switch (converterType) {
+                case OpenCCServiceConverterTypeS2T:
+                    json=@"s2t.json";
+                    break;
+                case OpenCCServiceConverterTypeT2S:
+                    json=@"t2s.json";
+                    break;
+                case OpenCCServiceConverterTypeS2TW:
+                    json=@"s2tw.json";
+                    break;
+                case OpenCCServiceConverterTypeTW2S:
+                    json=@"tw2s.json";
+                    break;
+                case OpenCCServiceConverterTypeS2HK:
+                    json=@"s2hk.json";
+                    break;
+                case OpenCCServiceConverterTypeHK2S:
+                    json=@"hk2s.json";
+                    break;
+                case OpenCCServiceConverterTypeS2TWP:
+                    json=@"s2twp.json";
+                    break;
+                case OpenCCServiceConverterTypeTW2SP:
+                    json=@"tw2sp.json";
+                    break;
+                case OpenCCServiceConverterTypeT2HK:
+                    json=@"t2hk.json";
+                    break;
+                case OpenCCServiceConverterTypeT2TW:
+                    json=@"t2tw.json";
+                    break;
+                    
+                default:json = @"s2t.json";break;
+            }
+            
+            
+            NSBundle* bundle = [self bundleWithBundleName:@"opencc" podName:@"opencc_plugin"];
+            NSString *config = [[bundle resourcePath] stringByAppendingPathComponent:json];
+            const std::string *c = new std::string([config UTF8String]);
+            
+            lastConverter = new opencc::SimpleConverter(*c);
+            
+            lastConverterType = converterType;
         }
-        
-        NSBundle* bundle = [self bundleWithBundleName:@"opencc" podName:@"opencc_plugin"];
-        NSString *config = [[bundle resourcePath] stringByAppendingPathComponent:json];
-        const std::string *c = new std::string([config UTF8String]);
-        simpleConverter = new opencc::SimpleConverter(*c);
     }
     return self;
 }
@@ -106,12 +113,11 @@ class SimpleConverter;
 }
 
 - (NSString *)convert:(NSString *)str {
-    std::string st = simpleConverter->Convert([str UTF8String]);
+    std::string st = lastConverter->Convert([str UTF8String]);
     return [NSString stringWithCString:st.c_str() encoding:NSUTF8StringEncoding];
 }
 
 -(void)dealloc {
-    delete simpleConverter;
 }
 
 @end
