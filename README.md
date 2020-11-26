@@ -1,6 +1,6 @@
 # opencc_plugin
 
-[copy from flutter_opencc](https://pub.dartlang.org/packages/flutter_opencc) 添加 bundle， 和异步执行转换
+[copy from flutter_opencc](https://pub.dartlang.org/packages/flutter_opencc) 添加 bundle，缓存Converter 和 异步执行转换
 
 > Conversion between Traditional and Simplified Chinese using [opencc](https://github.com/BYVoid/OpenCC)
 

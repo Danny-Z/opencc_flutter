@@ -1,6 +1,6 @@
 name: opencc_plugin
 description: OpenCC 简繁体相互转换
-version: 0.0.1
+version: 0.0.2
 homepage: https://github.com/Danny-Z/opencc_flutter
 
 environment:
